@@ -1,0 +1,93 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewBag.Title = "Iniciar Sesión";
+    Layout = null; // Sin diseño compartido para mantenerlo simple
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <style>
+        /* Incluye aquí los estilos CSS del diseño original */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+            .login-container h2 {
+                font-size: 28px;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+            .login-input[type="submit"] {
+                background-color: #003366;
+                color: white;
+                border: none;
+                cursor: pointer;
+                font-weight: bold;
+                transition: background-color 0.3s ease;
+            }
+
+                .login-input[type="submit"]:hover {
+                    background-color: #002244;
+                }
+
+        .error-message {
+            color: red;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form method="post" asp-action="Login" asp-controller="Account">
+            <!-- Usuario -->
+            <input type="text" name="usuario" class="login-input" placeholder="Usuario" required />
+            <!-- Contraseña -->
+            <input type="password" name="contrasena" class="login-input" placeholder="Contraseña" required />
+            <!-- Botón -->
+            <input type="submit" value="Iniciar Sesión" class="login-input" />
+        </form>
+
+        @if (ViewBag.Error != null)
+        {
+            <p class="error-message">@ViewBag.Error</p>
+        }
+    </div>
+</body>
+</html>
+

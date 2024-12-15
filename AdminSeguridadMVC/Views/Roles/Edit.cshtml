@@ -1,0 +1,27 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model AdminSeguridadMVC.Models.Rol
+
+@{
+    ViewBag.Title = Model.RolID == 0 ? "Crear Rol" : "Editar Rol";
+}
+
+<div class="container">
+    <h1>@ViewBag.Title</h1>
+
+    <form asp-action="Edit">
+        <div class="form-group">
+            <label for="NombreRol">Nombre del Rol</label>
+            <input asp-for="NombreRol" class="form-control" />
+            <span asp-validation-for="NombreRol" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<style>
+   
+</style>

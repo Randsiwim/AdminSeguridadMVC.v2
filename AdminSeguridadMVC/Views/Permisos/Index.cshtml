@@ -1,0 +1,42 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<AdminSeguridadMVC.Models.Permiso>
+
+@{
+    ViewBag.Title = "Gestión de Permisos";
+}
+
+<div class="container">
+    <h1 class="page-title">Gestión de Permisos</h1>
+
+    <a asp-action="Edit" class="btn btn-primary">Crear Nuevo Permiso</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre del Permiso</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var permiso in Model)
+            {
+                <tr>
+                    <td>@permiso.PermisoID</td>
+                    <td>@permiso.NombrePermiso</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@permiso.PermisoID" class="btn btn-success">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@permiso.PermisoID" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<style>
+    /* Usa el CSS que ya compartiste */
+</style>
+

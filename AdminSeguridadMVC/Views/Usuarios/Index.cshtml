@@ -1,0 +1,49 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model IEnumerable<AdminSeguridadMVC.Models.Usuario>
+
+@{
+    ViewBag.Title = "Gestión de Usuarios";
+}
+
+<div class="container">
+    <h1>Gestión de Usuarios</h1>
+
+    <div>
+        <a asp-action="Edit" class="btn btn-primary">Agregar Usuario</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Email</th>
+                <th>Nombre Completo</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.UsuarioID</td>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.Rol?.NombreRol</td>
+                    <td>@usuario.Email</td>
+                    <td>@usuario.NombreCompleto</td>
+                    <td>@usuario.Telefono</td>
+                    <td>@usuario.Direccion</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@usuario.UsuarioID" class="btn btn-success">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@usuario.UsuarioID" class="btn btn-danger">Eliminar</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
