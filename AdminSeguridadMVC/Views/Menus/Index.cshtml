@@ -1,21 +1,29 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @model IEnumerable<AdminSeguridadMVC.Models.Menu>
 
 @{
     ViewBag.Title = "Gestión de Menús";
 }
 
+<div class="header">
+    <h1>Administración de Seguridad</h1>
+    <nav>
+        <a asp-controller="Home" asp-action="Index" class="nav-link">Inicio</a>
+        <a asp-controller="Usuarios" asp-action="Index" class="nav-link">Usuarios</a>
+        <a asp-controller="Roles" asp-action="Index" class="nav-link">Roles</a>
+        <a asp-controller="Permisos" asp-action="Index" class="nav-link">Permisos</a>
+        <a asp-controller="Menus" asp-action="Index" class="nav-link">Menús</a>
+        <a asp-controller="Account" asp-action="Logout" class="nav-link">Salir</a>
+    </nav>
+</div>
+
 <div class="container">
     <h2>Gestión de Menús</h2>
     <div class="menu-container">
-        @foreach (var menu in Model)
-        {
-            <a href="@menu.URL" class="menu-item">
-                @menu.NombreMenu
-            </a>
-        }
+        <a asp-controller="Usuarios" asp-action="Index" class="btn btn-primary">Gestión de Usuarios</a>
+        <a asp-controller="Roles" asp-action="Index" class="btn btn-primary">Gestión de Roles</a>
+        <a asp-controller="Permisos" asp-action="Index" class="btn btn-primary">Gestión de Permisos</a>
+        
     </div>
 </div>
 

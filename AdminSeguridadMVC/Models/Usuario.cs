@@ -12,6 +12,7 @@
         public int RolID { get; set; }
 
         public Rol Rol { get; set; } // Relación con Rol
+        public byte[]? Foto { get; set; } // Nueva propiedad para la foto
 
         // Propiedad de navegación para la relación muchos a muchos con Permisos
         public ICollection<UsuarioPermiso> UsuarioPermisos { get; set; }

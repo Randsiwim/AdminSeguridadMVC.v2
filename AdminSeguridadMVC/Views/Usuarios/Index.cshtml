@@ -1,7 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model IEnumerable<AdminSeguridadMVC.Models.Usuario>
+﻿@model IEnumerable<AdminSeguridadMVC.Models.Usuario>
 
 @{
     ViewBag.Title = "Gestión de Usuarios";
@@ -10,14 +7,17 @@
 <div class="container">
     <h1>Gestión de Usuarios</h1>
 
+    <!-- Botón para agregar un nuevo usuario -->
     <div>
         <a asp-action="Edit" class="btn btn-primary">Agregar Usuario</a>
     </div>
 
-    <table class="table">
+    <!-- Tabla con datos de los usuarios -->
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Foto</th>
                 <th>Usuario</th>
                 <th>Rol</th>
                 <th>Email</th>
@@ -32,15 +32,32 @@
             {
                 <tr>
                     <td>@usuario.UsuarioID</td>
+
+                    <!-- Columna para mostrar la foto -->
+                    <td>
+                        @if (usuario.Foto != null)
+                        {
+                            <img src="@Url.Action("ObtenerFoto", "Usuarios", new { id = usuario.UsuarioID })"
+                                 alt="Foto del usuario" width="50" height="50" style="border-radius: 50%;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default.png"
+                                 alt="Sin Foto" width="50" height="50" style="border-radius: 50%;" />
+                        }
+                    </td>
+
                     <td>@usuario.NombreUsuario</td>
                     <td>@usuario.Rol?.NombreRol</td>
                     <td>@usuario.Email</td>
                     <td>@usuario.NombreCompleto</td>
                     <td>@usuario.Telefono</td>
                     <td>@usuario.Direccion</td>
+
+                    <!-- Botones de acción -->
                     <td>
-                        <a asp-action="Edit" asp-route-id="@usuario.UsuarioID" class="btn btn-success">Editar</a>
-                        <a asp-action="Delete" asp-route-id="@usuario.UsuarioID" class="btn btn-danger">Eliminar</a>
+                        <a asp-action="Edit" asp-route-id="@usuario.UsuarioID" class="btn btn-success btn-sm">Editar</a>
+                        <a asp-action="Delete" asp-route-id="@usuario.UsuarioID" class="btn btn-danger btn-sm">Eliminar</a>
                     </td>
                 </tr>
             }

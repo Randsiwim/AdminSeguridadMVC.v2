@@ -1,60 +1,46 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@model AdminSeguridadMVC.Models.Usuario
+﻿@model AdminSeguridadMVC.Models.Usuario
 
 @{
-    ViewBag.Title = Model.UsuarioID == 0 ? "Agregar Usuario" : "Editar Usuario";
+    ViewBag.Title = "Editar Usuario";
 }
 
 <div class="container">
-    <h1>@ViewBag.Title</h1>
+    <h2>Editar Usuario</h2>
 
-    <form asp-action="Edit">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <input asp-for="UsuarioID" type="hidden" />
+
         <div class="form-group">
-            <label for="NombreUsuario">Usuario:</label>
+            <label asp-for="NombreUsuario">Usuario</label>
             <input asp-for="NombreUsuario" class="form-control" />
-            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
         </div>
 
         <div class="form-group">
-            <label for="RolID">Rol:</label>
-            <input asp-for="RolID" class="form-control" />
-            <span asp-validation-for="RolID" class="text-danger"></span>
+            <label asp-for="Email">Email</label>
+            <input asp-for="Email" class="form-control" />
         </div>
 
         <div class="form-group">
-            <label for="Email">Email:</label>
-            <input asp-for="Email" type="email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label for="NombreCompleto">Nombre Completo:</label>
+            <label asp-for="NombreCompleto">Nombre Completo</label>
             <input asp-for="NombreCompleto" class="form-control" />
-            <span asp-validation-for="NombreCompleto" class="text-danger"></span>
         </div>
 
+        <!-- Campo para cargar foto -->
         <div class="form-group">
-            <label for="Clave">Clave:</label>
-            <input asp-for="Clave" type="password" class="form-control" />
-            <span asp-validation-for="Clave" class="text-danger"></span>
+            <label>Foto</label>
+            <input type="file" name="fotoFile" class="form-control" />
         </div>
 
-        <div class="form-group">
-            <label for="Telefono">Teléfono:</label>
-            <input asp-for="Telefono" class="form-control" />
-            <span asp-validation-for="Telefono" class="text-danger"></span>
-        </div>
-
-        <div class="form-group">
-            <label for="Direccion">Dirección:</label>
-            <input asp-for="Direccion" class="form-control" />
-            <span asp-validation-for="Direccion" class="text-danger"></span>
-        </div>
+        <!-- Mostrar la foto actual -->
+        @if (Model?.Foto != null)
+        {
+            <div class="form-group">
+                <label>Foto Actual:</label><br />
+                <img src="@Url.Action("ObtenerFoto", "Usuarios", new { id = Model.UsuarioID })" alt="Foto del Usuario" width="150" />
+            </div>
+        }
 
         <button type="submit" class="btn btn-success">Guardar</button>
         <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
-
