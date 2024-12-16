@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using AdminSeguridadMVC.Models;
 using System.IO;
 using System.Linq;
-using AdminSeguridadMVC.Models;
-using Microsoft.EntityFrameworkCore;
 
 public class UsuariosController : Controller
 {
@@ -14,14 +14,7 @@ public class UsuariosController : Controller
         _context = context;
     }
 
-    // Acción para listar usuarios en la vista Index
-    public IActionResult Index()
-    {
-        var usuarios = _context.Usuarios.ToList(); // Cargar todos los usuarios
-        return View(usuarios);
-    }
-
-    // Acción para mostrar el formulario de usuario (Nuevo o Editar)
+    // GET: Mostrar formulario de edición o creación
     public IActionResult Edit(int? id)
     {
         if (id == null)
@@ -31,35 +24,41 @@ public class UsuariosController : Controller
         if (usuario == null)
             return NotFound();
 
-        return View(usuario); // Editar usuario existente
+        return View(usuario);
     }
 
-    // Acción para guardar usuario con foto
+    // POST: Guardar cambios del usuario
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Edit(Usuario usuario, IFormFile fotoFile)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            // Validar tamaño del archivo
-            if (fotoFile != null && fotoFile.Length > 5 * 1024 * 1024) // 5 MB límite
-            {
-                ModelState.AddModelError("", "El archivo es demasiado grande. Máximo permitido: 5 MB.");
-                return View(usuario);
-            }
+            ModelState.AddModelError("", "Los datos ingresados no son válidos.");
+            return View(usuario);
+        }
 
-            // Procesar la foto y convertirla en byte[]
+        try
+        {
+            // Manejo de la foto si se sube una nueva
             if (fotoFile != null && fotoFile.Length > 0)
             {
+                var extension = Path.GetExtension(fotoFile.FileName).ToLower();
+                if (extension != ".png" && extension != ".jpg" && extension != ".jpeg")
+                {
+                    ModelState.AddModelError("", "Solo se permiten archivos en formato PNG o JPG.");
+                    return View(usuario);
+                }
+
                 using (var ms = new MemoryStream())
                 {
                     fotoFile.CopyTo(ms);
                     usuario.Foto = ms.ToArray();
                 }
             }
-            else
+            else if (usuario.UsuarioID != 0)
             {
-                // Mantener la foto anterior si no se sube una nueva
+                // Mantener la foto existente si no se sube una nueva
                 var usuarioExistente = _context.Usuarios
                     .AsNoTracking()
                     .FirstOrDefault(u => u.UsuarioID == usuario.UsuarioID);
@@ -68,46 +67,66 @@ public class UsuariosController : Controller
                     usuario.Foto = usuarioExistente.Foto;
             }
 
-            // Guardar en la base de datos
-            if (usuario.UsuarioID == 0)
+            // Diferenciar entre Crear y Editar
+            if (usuario.UsuarioID == 0) // Nuevo usuario
+            {
                 _context.Usuarios.Add(usuario);
-            else
-                _context.Usuarios.Update(usuario);
+                TempData["Success"] = "Usuario agregado correctamente.";
+            }
+            else // Editar usuario existente
+            {
+                _context.Entry(usuario).State = EntityState.Modified;
+                TempData["Success"] = "Usuario editado correctamente.";
+            }
 
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-
-        return View(usuario);
+        catch (DbUpdateException ex)
+        {
+            ModelState.AddModelError("", $"Error al guardar los datos: {ex.Message}");
+            return View(usuario);
+        }
     }
 
 
-    // Acción para eliminar un usuario
+    // GET: Mostrar la foto del usuario
+    public IActionResult ObtenerFoto(int id)
+    {
+        var usuario = _context.Usuarios.Find(id);
+        if (usuario?.Foto != null)
+            return File(usuario.Foto, "image/png");
+
+        return File("~/images/default.png", "image/png"); // Imagen por defecto
+    }
+
+    // POST: Eliminar un usuario
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Delete(int id)
     {
-        var usuario = _context.Usuarios.Find(id);
-        if (usuario != null)
+        try
         {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
             _context.Usuarios.Remove(usuario);
             _context.SaveChanges();
+            TempData["Success"] = "Usuario eliminado correctamente.";
+        }
+        catch
+        {
+            TempData["Error"] = "Error al eliminar el usuario.";
         }
 
         return RedirectToAction(nameof(Index));
     }
 
-    // Acción para obtener la foto de un usuario
-    public IActionResult ObtenerFoto(int id)
+    // GET: Listar los usuarios
+    public IActionResult Index()
     {
-        var usuario = _context.Usuarios.Find(id);
-        if (usuario?.Foto != null)
-        {
-            return File(usuario.Foto, "image/png"); // Devuelve la imagen en formato PNG
-        }
-
-        // Imagen por defecto si el usuario no tiene foto
-        return File("~/images/default.png", "image/png");
+        var usuarios = _context.Usuarios.ToList();
+        return View(usuarios);
     }
-
 }
